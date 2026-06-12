@@ -2,6 +2,10 @@
 
 import { useState, useRef, useEffect } from "react";
 import { MessageSquare, X, Send, Bot, User, Loader2, Phone } from "lucide-react";
+import Vapi from "@vapi-ai/web";
+
+// Initialize Vapi only on the client side to avoid SSR issues
+const vapi = typeof window !== "undefined" ? new Vapi(process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY || '') : null;
 
 type Message = {
   role: "user" | "ai";
@@ -15,6 +19,7 @@ export function AiReceptionist() {
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [callStatus, setCallStatus] = useState<"inactive" | "loading" | "active">("inactive");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -24,6 +29,28 @@ export function AiReceptionist() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Vapi Event Listeners
+  useEffect(() => {
+    if (!vapi) return;
+
+    const onCallStart = () => setCallStatus("active");
+    const onCallEnd = () => setCallStatus("inactive");
+    const onError = (e: any) => {
+      console.error("Vapi Error:", e);
+      setCallStatus("inactive");
+    };
+
+    vapi.on("call-start", onCallStart);
+    vapi.on("call-end", onCallEnd);
+    vapi.on("error", onError);
+
+    return () => {
+      vapi.off("call-start", onCallStart);
+      vapi.off("call-end", onCallEnd);
+      vapi.off("error", onError);
+    };
+  }, []);
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,16 +79,37 @@ export function AiReceptionist() {
     }
   };
 
+  const toggleCall = () => {
+    if (callStatus === "active" || callStatus === "loading") {
+      vapi?.stop();
+      setCallStatus("inactive");
+    } else {
+      setCallStatus("loading");
+      const assistantId = process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID;
+      if (!assistantId) {
+        console.error("Missing NEXT_PUBLIC_VAPI_ASSISTANT_ID");
+        setCallStatus("inactive");
+        alert("Voice Assistant ID is not configured.");
+        return;
+      }
+      vapi?.start(assistantId);
+    }
+  };
+
   return (
     <>
-      {/* Voice Assistant Call Button (Vapi / Twilio) */}
-      <a
-        href="tel:+18005551234" // Replace with actual Twilio/Vapi phone number
-        className={`fixed bottom-24 right-6 z-50 flex items-center justify-center w-14 h-14 bg-blue-600 text-white rounded-full shadow-2xl hover:scale-110 transition-all duration-300 ${isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`}
-        title="Call our AI Voice Assistant"
+      {/* Voice Assistant Call Button (Vapi Web Call) */}
+      <button
+        onClick={toggleCall}
+        className={`fixed bottom-24 right-6 z-50 flex items-center justify-center w-14 h-14 rounded-full shadow-2xl transition-all duration-300 ${
+          callStatus === 'active' ? 'bg-red-500 animate-pulse' : 
+          callStatus === 'loading' ? 'bg-orange-400' : 'bg-blue-600 hover:scale-110'
+        } text-white ${isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`}
+        title={callStatus === 'active' ? "End Call" : "Call our AI Voice Assistant"}
       >
-        <Phone className="w-6 h-6" />
-      </a>
+        {callStatus === 'loading' ? <Loader2 className="w-6 h-6 animate-spin" /> : 
+         callStatus === 'active' ? <X className="w-6 h-6" /> : <Phone className="w-6 h-6" />}
+      </button>
 
       {/* Floating Chat Button */}
       <button
