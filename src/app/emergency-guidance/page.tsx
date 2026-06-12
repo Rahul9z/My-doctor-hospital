@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { AlertTriangle, Heart, Droplets, Flame, Activity, Brain } from "lucide-react";
+import { AlertTriangle, Heart, Droplets, Flame, Brain } from "lucide-react";
+import { MedicalGuidanceChat } from "@/components/ui/MedicalGuidanceChat";
 
 export default function EmergencyGuidancePage() {
   const guidelines = [
@@ -98,6 +99,15 @@ export default function EmergencyGuidancePage() {
               </ul>
             </motion.div>
           ))}
+        </div>
+
+        {/* AI Assistant Section */}
+        <div className="max-w-4xl mx-auto mt-20">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold text-slate-900 mb-4">Ask the AI Medical Assistant</h2>
+            <p className="text-slate-600">If your situation is not listed above, describe it below for immediate preliminary guidance.</p>
+          </div>
+          <MedicalGuidanceChat />
         </div>
       </div>
     </div>

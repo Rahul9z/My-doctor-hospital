@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { PhoneCall, AlertTriangle, MapPin, Ambulance } from "lucide-react";
+import { PhoneCall, AlertTriangle, Ambulance } from "lucide-react";
 import Link from "next/link";
 
 export default function EmergencyPage() {

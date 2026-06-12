@@ -61,7 +61,7 @@ export default function DepartmentsPage() {
 
         <div className="mt-20 bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-slate-100 flex flex-col md:flex-row items-center gap-10">
           <div className="flex-1">
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">Can't decide which department?</h2>
+            <h2 className="text-3xl font-bold text-slate-900 mb-4">Can&apos;t decide which department?</h2>
             <p className="text-slate-600 mb-6">Our AI-Powered Symptom Checker can guide you to the right specialist based on your symptoms.</p>
             <Link href="/symptom-checker" className="inline-flex items-center gap-2 px-6 py-3 bg-secondary text-white font-bold rounded-full hover:bg-secondary/90 transition-colors shadow-lg">
               <Activity className="w-5 h-5" />

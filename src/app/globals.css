@@ -41,24 +41,6 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #020617;
-    --foreground: #f8fafc;
-    --primary: #3b82f6;
-    --primary-foreground: #ffffff;
-    --secondary: #2dd4bf;
-    --secondary-foreground: #020617;
-    --muted: #0f172a;
-    --muted-foreground: #94a3b8;
-    --accent: #1e293b;
-    --accent-foreground: #f8fafc;
-    --card: #0f172a;
-    --card-foreground: #f8fafc;
-    --border: #1e293b;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
@@ -69,9 +51,9 @@ body {
 
 @layer utilities {
   .glass {
-    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-sm dark:bg-slate-900/70 dark:border-white/10;
+    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-sm;
   }
   .glass-card {
-    @apply bg-white/80 backdrop-blur-lg border border-white/30 shadow-xl rounded-2xl dark:bg-slate-900/80 dark:border-slate-800;
+    @apply bg-white/80 backdrop-blur-lg border border-white/30 shadow-xl rounded-2xl;
   }
 }

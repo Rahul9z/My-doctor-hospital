@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function BlogPage() {
   const posts = [
@@ -28,7 +29,7 @@ export default function BlogPage() {
               className="bg-white rounded-2xl overflow-hidden shadow-lg border border-slate-100 group cursor-pointer"
             >
               <div className="aspect-video relative overflow-hidden bg-slate-200">
-                <img src={post.image} alt={post.title} className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" />
+                <Image src={post.image} alt={post.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
                 <div className="absolute top-4 left-4 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full">
                   {post.category}
                 </div>

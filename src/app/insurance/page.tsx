@@ -1,7 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ShieldCheck, CreditCard, FileText, CheckCircle2 } from "lucide-react";
+import { ShieldCheck, CreditCard, FileText } from "lucide-react";
 
 export default function InsurancePage() {
   const insurancePartners = [

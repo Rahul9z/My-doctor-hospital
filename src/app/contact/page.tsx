@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { MapPin, Phone, Mail, Clock, Send } from "lucide-react";
 
 export default function ContactPage() {
@@ -9,7 +8,7 @@ export default function ContactPage() {
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">Contact <span className="text-primary">Us</span></h1>
-          <p className="text-lg text-slate-600">We're here to help. Reach out to us for any inquiries, feedback, or support.</p>
+          <p className="text-lg text-slate-600">We&apos;re here to help. Reach out to us for any inquiries, feedback, or support.</p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
