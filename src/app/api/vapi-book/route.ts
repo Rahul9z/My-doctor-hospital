@@ -50,6 +50,28 @@ export async function POST(req: Request) {
           }
 
           // Return success to Vapi so the AI can say "I have booked your appointment!"
+          
+          // BONUS: Trigger WhatsApp confirmation for the demo!
+          try {
+            // Get the host URL to make a relative API call
+            const host = req.headers.get("host") || "localhost:3000";
+            const protocol = host.includes("localhost") ? "http" : "https";
+            
+            await fetch(`${protocol}://${host}/api/whatsapp`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                phone: phone,
+                name: patientName,
+                department: department,
+                date: date,
+                time: time
+              })
+            });
+          } catch (whatsappError) {
+            console.error("Failed to trigger WhatsApp from Vapi webhook", whatsappError);
+          }
+
           return NextResponse.json({ 
             results: [{
               toolCallId: toolCall.id,
