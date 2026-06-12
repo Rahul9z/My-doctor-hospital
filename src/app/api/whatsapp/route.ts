@@ -18,9 +18,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: true, warning: "Credentials missing, message not sent" });
     }
 
-    // Format phone number (remove non-digits, ensure country code)
-    const formattedPhone = phone.replace(/\D/g, '');
-
+    // For the college demo, we are overriding the patient's phone number and ALWAYS sending the WhatsApp message to the student's verified Meta phone number.
+    // 91 is the country code for India, followed by the user's number.
+    const demoVerifiedNumber = "919347756793"; 
+    const formattedPhone = demoVerifiedNumber;
     // Send using Meta Cloud API
     const response = await fetch(`https://graph.facebook.com/v17.0/${PHONE_NUMBER_ID}/messages`, {
       method: "POST",
@@ -33,19 +34,8 @@ export async function POST(req: Request) {
         to: formattedPhone,
         type: "template",
         template: {
-          name: "appointment_confirmation", // Replace with your approved Meta template name
-          language: { code: "en_US" },
-          components: [
-            {
-              type: "body",
-              parameters: [
-                { type: "text", text: name },
-                { type: "text", text: department },
-                { type: "text", text: date },
-                { type: "text", text: time }
-              ]
-            }
-          ]
+          name: "hello_world", // Using the default pre-approved Meta template for testing
+          language: { code: "en_US" }
         }
       })
     });
