@@ -4,8 +4,9 @@ import { useState, useRef, useEffect } from "react";
 import { MessageSquare, X, Send, Bot, User, Loader2, Phone } from "lucide-react";
 import Vapi from "@vapi-ai/web";
 
-// Initialize Vapi only on the client side to avoid SSR issues
-const vapi = typeof window !== "undefined" ? new Vapi(process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY || '') : null;
+// Initialize Vapi only on the client side AND only if the key exists to prevent app crash
+const publicKey = process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY;
+const vapi = typeof window !== "undefined" && publicKey ? new Vapi(publicKey) : null;
 
 type Message = {
   role: "user" | "ai";
@@ -86,13 +87,15 @@ export function AiReceptionist() {
     } else {
       setCallStatus("loading");
       const assistantId = process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID;
-      if (!assistantId) {
-        console.error("Missing NEXT_PUBLIC_VAPI_ASSISTANT_ID");
+      
+      if (!vapi || !assistantId) {
+        console.error("Missing Vapi Configuration");
         setCallStatus("inactive");
-        alert("Voice Assistant ID is not configured.");
+        alert("Voice Assistant is not fully configured. Please ensure your Public Key and Assistant ID are in .env.local and restart the server.");
         return;
       }
-      vapi?.start(assistantId);
+      
+      vapi.start(assistantId);
     }
   };
 
