@@ -1,14 +1,13 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
-// Initialize Supabase client with Service Role Key to bypass RLS for server-side webhook
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-// Fallback to anon key if service role is not available, though service role is recommended for webhooks
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!; 
-const supabase = createClient(supabaseUrl, supabaseKey);
-
 export async function POST(req: Request) {
   try {
+    // Initialize Supabase inside the handler to prevent Next.js build errors when env vars are missing at build time
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''; 
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
     const payload = await req.json();
 
     // Vapi sends a function call payload when the AI decides to trigger a tool
