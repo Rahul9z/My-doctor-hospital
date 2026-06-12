@@ -53,21 +53,29 @@ export async function POST(req: Request) {
           
           // BONUS: Trigger WhatsApp confirmation for the demo!
           try {
-            // Get the host URL to make a relative API call
-            const host = req.headers.get("host") || "localhost:3000";
-            const protocol = host.includes("localhost") ? "http" : "https";
-            
-            await fetch(`${protocol}://${host}/api/whatsapp`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                phone: phone,
-                name: patientName,
-                department: department,
-                date: date,
-                time: time
-              })
-            });
+            const WHATSAPP_TOKEN = process.env.WHATSAPP_TOKEN;
+            const PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
+
+            if (WHATSAPP_TOKEN && PHONE_NUMBER_ID) {
+              const demoVerifiedNumber = "919347756793"; // Hardcoded for demo
+              
+              await fetch(`https://graph.facebook.com/v17.0/${PHONE_NUMBER_ID}/messages`, {
+                method: "POST",
+                headers: {
+                  "Authorization": `Bearer ${WHATSAPP_TOKEN}`,
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                  messaging_product: "whatsapp",
+                  to: demoVerifiedNumber,
+                  type: "template",
+                  template: {
+                    name: "hello_world", // Default pre-approved template
+                    language: { code: "en_US" }
+                  }
+                })
+              });
+            }
           } catch (whatsappError) {
             console.error("Failed to trigger WhatsApp from Vapi webhook", whatsappError);
           }
